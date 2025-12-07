@@ -3,6 +3,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Label } from '@/components/ui/label';
 import Icon from '@/components/ui/icon';
 
 interface KnifeItem {
@@ -20,16 +22,22 @@ const Index = () => {
   const [cartCount, setCartCount] = useState(0);
   const [cartItems, setCartItems] = useState<KnifeItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState('card');
 
   const knives: KnifeItem[] = [
-    { id: 1, name: 'Karambit Fade', type: 'Karambit', quality: 'Factory New', price: 45000, isNew: true, image: '/placeholder.svg' },
-    { id: 2, name: 'M9 Bayonet Doppler', type: 'M9 Bayonet', quality: 'Minimal Wear', price: 32000, isNew: true, image: '/placeholder.svg' },
-    { id: 3, name: 'Butterfly Knife Tiger Tooth', type: 'Butterfly', quality: 'Factory New', price: 38000, isNew: false, image: '/placeholder.svg' },
-    { id: 4, name: 'Gut Knife Gamma Doppler', type: 'Gut Knife', quality: 'Factory New', price: 15000, isNew: true, image: '/placeholder.svg' },
-    { id: 5, name: 'Ursus Knife Slaughter', type: 'Ursus', quality: 'Field-Tested', price: 18000, isNew: false, image: '/placeholder.svg' },
-    { id: 6, name: 'Talon Knife Crimson Web', type: 'Talon', quality: 'Minimal Wear', price: 52000, isNew: false, image: '/placeholder.svg' },
-    { id: 7, name: 'Bayonet Autotronic', type: 'Bayonet', quality: 'Factory New', price: 28000, isNew: false, image: '/placeholder.svg' },
-    { id: 8, name: 'Nomad Knife Blue Steel', type: 'Nomad', quality: 'Well-Worn', price: 12000, isNew: false, image: '/placeholder.svg' },
+    { id: 1, name: 'Karambit Fade', type: 'Karambit', quality: 'Factory New', price: 45000, isNew: true, image: 'https://images.unsplash.com/photo-1595590424283-b8f17842773f?w=400&h=300&fit=crop' },
+    { id: 2, name: 'M9 Bayonet Doppler', type: 'M9 Bayonet', quality: 'Minimal Wear', price: 32000, isNew: true, image: 'https://images.unsplash.com/photo-1566064352835-7c7c6c1e4dcb?w=400&h=300&fit=crop' },
+    { id: 3, name: 'Butterfly Knife Tiger Tooth', type: 'Butterfly', quality: 'Factory New', price: 38000, isNew: false, image: 'https://images.unsplash.com/photo-1585792180666-f7347c490ee2?w=400&h=300&fit=crop' },
+    { id: 4, name: 'Gut Knife Gamma Doppler', type: 'Gut Knife', quality: 'Factory New', price: 15000, isNew: true, image: 'https://images.unsplash.com/photo-1593500183151-ab97013ba6d9?w=400&h=300&fit=crop' },
+    { id: 5, name: 'Shadow Daggers Rust Coat', type: 'Shadow Daggers', quality: 'Battle-Scarred', price: 3500, isNew: false, image: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=400&h=300&fit=crop' },
+    { id: 6, name: 'Falchion Knife Safari Mesh', type: 'Falchion', quality: 'Field-Tested', price: 2800, isNew: false, image: 'https://images.unsplash.com/photo-1595590424283-b8f17842773f?w=400&h=300&fit=crop&sat=-50' },
+    { id: 7, name: 'Navaja Knife Boreal Forest', type: 'Navaja', quality: 'Well-Worn', price: 1900, isNew: false, image: 'https://images.unsplash.com/photo-1566064352835-7c7c6c1e4dcb?w=400&h=300&fit=crop&brightness=-20' },
+    { id: 8, name: 'Gut Knife Urban Masked', type: 'Gut Knife', quality: 'Battle-Scarred', price: 2200, isNew: false, image: 'https://images.unsplash.com/photo-1585792180666-f7347c490ee2?w=400&h=300&fit=crop&contrast=1.2' },
+    { id: 9, name: 'Bayonet Autotronic', type: 'Bayonet', quality: 'Factory New', price: 28000, isNew: false, image: 'https://images.unsplash.com/photo-1593500183151-ab97013ba6d9?w=400&h=300&fit=crop&hue=180' },
+    { id: 10, name: 'Bowie Knife Stained', type: 'Bowie', quality: 'Minimal Wear', price: 4500, isNew: false, image: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=400&h=300&fit=crop&sepia=30' },
+    { id: 11, name: 'Stiletto Knife Night Stripe', type: 'Stiletto', quality: 'Field-Tested', price: 5200, isNew: true, image: 'https://images.unsplash.com/photo-1595590424283-b8f17842773f?w=400&h=300&fit=crop&hue=240' },
+    { id: 12, name: 'Classic Knife Forest DDPAT', type: 'Classic', quality: 'Well-Worn', price: 1500, isNew: false, image: 'https://images.unsplash.com/photo-1566064352835-7c7c6c1e4dcb?w=400&h=300&fit=crop&sepia=50' },
   ];
 
   const addToCart = (knife: KnifeItem) => {
@@ -246,7 +254,7 @@ const Index = () => {
                   <div className="space-y-4 mb-6 max-h-96 overflow-y-auto">
                     {cartItems.map((item, index) => (
                       <div key={`${item.id}-${index}`} className="flex items-center gap-4 p-3 bg-background rounded-lg">
-                        <img src={item.image} alt={item.name} className="w-16 h-16 object-contain" />
+                        <img src={item.image} alt={item.name} className="w-16 h-16 object-cover rounded" />
                         <div className="flex-1">
                           <h4 className="font-semibold text-sm">{item.name}</h4>
                           <p className="text-primary font-bold">{item.price.toLocaleString('ru-RU')} ₽</p>
@@ -270,13 +278,129 @@ const Index = () => {
                         {getTotalPrice().toLocaleString('ru-RU')} ₽
                       </span>
                     </div>
-                    <Button className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-bold">
+                    <Button 
+                      className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-bold"
+                      onClick={() => {
+                        setIsCartOpen(false);
+                        setIsCheckoutOpen(true);
+                      }}
+                    >
                       <Icon name="CreditCard" size={20} className="mr-2" />
                       Оформить заказ
                     </Button>
                   </div>
                 </>
               )}
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
+      {isCheckoutOpen && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 animate-fade-in">
+          <Card className="w-full max-w-lg bg-card border-primary/30 animate-scale-in">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-2xl font-bold flex items-center gap-2">
+                  <Icon name="CreditCard" size={24} className="text-primary" />
+                  Оформление заказа
+                </h3>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setIsCheckoutOpen(false)}
+                >
+                  <Icon name="X" size={24} />
+                </Button>
+              </div>
+
+              <div className="space-y-6">
+                <div>
+                  <h4 className="font-semibold mb-3 flex items-center gap-2">
+                    <Icon name="Package" size={18} className="text-accent" />
+                    Ваш заказ
+                  </h4>
+                  <div className="bg-background rounded-lg p-4 space-y-2 max-h-48 overflow-y-auto">
+                    {cartItems.map((item, index) => (
+                      <div key={`${item.id}-${index}`} className="flex justify-between text-sm">
+                        <span className="text-muted-foreground">{item.name}</span>
+                        <span className="font-semibold">{item.price.toLocaleString('ru-RU')} ₽</span>
+                      </div>
+                    ))}
+                    <div className="border-t border-border pt-2 flex justify-between font-bold">
+                      <span>Итого:</span>
+                      <span className="text-primary text-lg">{getTotalPrice().toLocaleString('ru-RU')} ₽</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <h4 className="font-semibold mb-3 flex items-center gap-2">
+                    <Icon name="Wallet" size={18} className="text-secondary" />
+                    Способ оплаты
+                  </h4>
+                  <RadioGroup value={paymentMethod} onValueChange={setPaymentMethod}>
+                    <div className="space-y-3">
+                      <div className="flex items-center space-x-3 bg-background rounded-lg p-4 border-2 border-transparent hover:border-primary/30 transition-colors cursor-pointer">
+                        <RadioGroupItem value="card" id="card" />
+                        <Label htmlFor="card" className="flex-1 cursor-pointer flex items-center gap-3">
+                          <Icon name="CreditCard" size={20} className="text-primary" />
+                          <div>
+                            <div className="font-semibold">Банковская карта</div>
+                            <div className="text-xs text-muted-foreground">Visa, MasterCard, МИР</div>
+                          </div>
+                        </Label>
+                      </div>
+
+                      <div className="flex items-center space-x-3 bg-background rounded-lg p-4 border-2 border-transparent hover:border-primary/30 transition-colors cursor-pointer">
+                        <RadioGroupItem value="crypto" id="crypto" />
+                        <Label htmlFor="crypto" className="flex-1 cursor-pointer flex items-center gap-3">
+                          <Icon name="Bitcoin" size={20} className="text-accent" />
+                          <div>
+                            <div className="font-semibold">Криптовалюта</div>
+                            <div className="text-xs text-muted-foreground">BTC, ETH, USDT</div>
+                          </div>
+                        </Label>
+                      </div>
+
+                      <div className="flex items-center space-x-3 bg-background rounded-lg p-4 border-2 border-transparent hover:border-primary/30 transition-colors cursor-pointer">
+                        <RadioGroupItem value="steam" id="steam" />
+                        <Label htmlFor="steam" className="flex-1 cursor-pointer flex items-center gap-3">
+                          <Icon name="Gamepad2" size={20} className="text-secondary" />
+                          <div>
+                            <div className="font-semibold">Steam скины</div>
+                            <div className="text-xs text-muted-foreground">Обмен на скины из Steam</div>
+                          </div>
+                        </Label>
+                      </div>
+
+                      <div className="flex items-center space-x-3 bg-background rounded-lg p-4 border-2 border-transparent hover:border-primary/30 transition-colors cursor-pointer">
+                        <RadioGroupItem value="sbp" id="sbp" />
+                        <Label htmlFor="sbp" className="flex-1 cursor-pointer flex items-center gap-3">
+                          <Icon name="Smartphone" size={20} className="text-primary" />
+                          <div>
+                            <div className="font-semibold">СБП (Система быстрых платежей)</div>
+                            <div className="text-xs text-muted-foreground">Оплата по номеру телефона</div>
+                          </div>
+                        </Label>
+                      </div>
+                    </div>
+                  </RadioGroup>
+                </div>
+
+                <Button 
+                  className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-bold text-lg h-12"
+                  onClick={() => {
+                    alert(`Заказ оформлен! Способ оплаты: ${paymentMethod === 'card' ? 'Банковская карта' : paymentMethod === 'crypto' ? 'Криптовалюта' : paymentMethod === 'steam' ? 'Steam скины' : 'СБП'}. Сумма: ${getTotalPrice().toLocaleString('ru-RU')} ₽`);
+                    setIsCheckoutOpen(false);
+                    setCartItems([]);
+                    setCartCount(0);
+                  }}
+                >
+                  <Icon name="Check" size={20} className="mr-2" />
+                  Оплатить {getTotalPrice().toLocaleString('ru-RU')} ₽
+                </Button>
+              </div>
             </CardContent>
           </Card>
         </div>
