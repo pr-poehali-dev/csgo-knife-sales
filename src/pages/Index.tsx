@@ -391,7 +391,15 @@ const Index = () => {
                 <Button 
                   className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-bold text-lg h-12"
                   onClick={() => {
-                    alert(`Заказ оформлен! Способ оплаты: ${paymentMethod === 'card' ? 'Банковская карта' : paymentMethod === 'crypto' ? 'Криптовалюта' : paymentMethod === 'steam' ? 'Steam скины' : 'СБП'}. Сумма: ${getTotalPrice().toLocaleString('ru-RU')} ₽`);
+                    if (paymentMethod === 'sbp') {
+                      const phone = '79822141678';
+                      const amount = getTotalPrice();
+                      const sbpUrl = `https://qr.nspk.ru/AS10003DKT0EJMK25O47N02GTE3V64QC?type=02&bank=100000000111&sum=${amount}&cur=RUB&payeeId=${phone}&phone=${phone}`;
+                      window.open(sbpUrl, '_blank');
+                      alert(`Переход на оплату ${amount.toLocaleString('ru-RU')} ₽ через СБП на номер +7 (982) 214-16-78`);
+                    } else {
+                      alert(`Заказ оформлен! Способ оплаты: ${paymentMethod === 'card' ? 'Банковская карта' : paymentMethod === 'crypto' ? 'Криптовалюта' : 'Steam скины'}. Сумма: ${getTotalPrice().toLocaleString('ru-RU')} ₽`);
+                    }
                     setIsCheckoutOpen(false);
                     setCartItems([]);
                     setCartCount(0);
