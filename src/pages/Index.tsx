@@ -7,7 +7,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import Icon from '@/components/ui/icon';
 
-interface KnifeItem {
+interface Item {
   id: number;
   name: string;
   type: string;
@@ -15,33 +15,43 @@ interface KnifeItem {
   price: number;
   isNew: boolean;
   image: string;
+  category: 'knife' | 'gloves';
 }
 
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [cartCount, setCartCount] = useState(0);
-  const [cartItems, setCartItems] = useState<KnifeItem[]>([]);
+  const [cartItems, setCartItems] = useState<Item[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<'all' | 'knife' | 'gloves'>('all');
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState('card');
 
-  const knives: KnifeItem[] = [
-    { id: 1, name: 'Karambit Fade', type: 'Karambit', quality: 'Factory New', price: 45000, isNew: true, image: 'https://images.unsplash.com/photo-1595590424283-b8f17842773f?w=400&h=300&fit=crop' },
-    { id: 2, name: 'M9 Bayonet Doppler', type: 'M9 Bayonet', quality: 'Minimal Wear', price: 32000, isNew: true, image: 'https://images.unsplash.com/photo-1566064352835-7c7c6c1e4dcb?w=400&h=300&fit=crop' },
-    { id: 3, name: 'Butterfly Knife Tiger Tooth', type: 'Butterfly', quality: 'Factory New', price: 38000, isNew: false, image: 'https://images.unsplash.com/photo-1585792180666-f7347c490ee2?w=400&h=300&fit=crop' },
-    { id: 4, name: 'Gut Knife Gamma Doppler', type: 'Gut Knife', quality: 'Factory New', price: 15000, isNew: true, image: 'https://images.unsplash.com/photo-1593500183151-ab97013ba6d9?w=400&h=300&fit=crop' },
-    { id: 5, name: 'Shadow Daggers Rust Coat', type: 'Shadow Daggers', quality: 'Battle-Scarred', price: 3500, isNew: false, image: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=400&h=300&fit=crop' },
-    { id: 6, name: 'Falchion Knife Safari Mesh', type: 'Falchion', quality: 'Field-Tested', price: 2800, isNew: false, image: 'https://images.unsplash.com/photo-1595590424283-b8f17842773f?w=400&h=300&fit=crop&sat=-50' },
-    { id: 7, name: 'Navaja Knife Boreal Forest', type: 'Navaja', quality: 'Well-Worn', price: 1900, isNew: false, image: 'https://images.unsplash.com/photo-1566064352835-7c7c6c1e4dcb?w=400&h=300&fit=crop&brightness=-20' },
-    { id: 8, name: 'Gut Knife Urban Masked', type: 'Gut Knife', quality: 'Battle-Scarred', price: 2200, isNew: false, image: 'https://images.unsplash.com/photo-1585792180666-f7347c490ee2?w=400&h=300&fit=crop&contrast=1.2' },
-    { id: 9, name: 'Bayonet Autotronic', type: 'Bayonet', quality: 'Factory New', price: 28000, isNew: false, image: 'https://images.unsplash.com/photo-1593500183151-ab97013ba6d9?w=400&h=300&fit=crop&hue=180' },
-    { id: 10, name: 'Bowie Knife Stained', type: 'Bowie', quality: 'Minimal Wear', price: 4500, isNew: false, image: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=400&h=300&fit=crop&sepia=30' },
-    { id: 11, name: 'Stiletto Knife Night Stripe', type: 'Stiletto', quality: 'Field-Tested', price: 5200, isNew: true, image: 'https://images.unsplash.com/photo-1595590424283-b8f17842773f?w=400&h=300&fit=crop&hue=240' },
-    { id: 12, name: 'Classic Knife Forest DDPAT', type: 'Classic', quality: 'Well-Worn', price: 1500, isNew: false, image: 'https://images.unsplash.com/photo-1566064352835-7c7c6c1e4dcb?w=400&h=300&fit=crop&sepia=50' },
+  const items: Item[] = [
+    { id: 1, name: 'Karambit Fade', type: 'Karambit', quality: 'Factory New', price: 45000, isNew: true, category: 'knife', image: 'https://cdn.cloudflare.steamstatic.com/apps/730/icons/econ/default_generated/weapon_knife_karambit_aq_fade_light_large.png' },
+    { id: 2, name: 'M9 Bayonet Doppler', type: 'M9 Bayonet', quality: 'Minimal Wear', price: 32000, isNew: true, category: 'knife', image: 'https://cdn.cloudflare.steamstatic.com/apps/730/icons/econ/default_generated/weapon_knife_m9_bayonet_am_doppler_phase2_light_large.png' },
+    { id: 3, name: 'Butterfly Knife Tiger Tooth', type: 'Butterfly', quality: 'Factory New', price: 38000, isNew: false, category: 'knife', image: 'https://cdn.cloudflare.steamstatic.com/apps/730/icons/econ/default_generated/weapon_knife_butterfly_an_tiger_orange_light_large.png' },
+    { id: 4, name: 'Gut Knife Gamma Doppler', type: 'Gut Knife', quality: 'Factory New', price: 15000, isNew: true, category: 'knife', image: 'https://cdn.cloudflare.steamstatic.com/apps/730/icons/econ/default_generated/weapon_knife_gut_am_gamma_doppler_phase1_light_large.png' },
+    { id: 5, name: 'Shadow Daggers Rust Coat', type: 'Shadow Daggers', quality: 'Battle-Scarred', price: 3500, isNew: false, category: 'knife', image: 'https://cdn.cloudflare.steamstatic.com/apps/730/icons/econ/default_generated/weapon_knife_push_aq_rust_coat_light_large.png' },
+    { id: 6, name: 'Falchion Knife Safari Mesh', type: 'Falchion', quality: 'Field-Tested', price: 2800, isNew: false, category: 'knife', image: 'https://cdn.cloudflare.steamstatic.com/apps/730/icons/econ/default_generated/weapon_knife_falchion_sp_mesh_tan_light_large.png' },
+    { id: 7, name: 'Navaja Knife Boreal Forest', type: 'Navaja', quality: 'Well-Worn', price: 1900, isNew: false, category: 'knife', image: 'https://cdn.cloudflare.steamstatic.com/apps/730/icons/econ/default_generated/weapon_knife_gypsy_jackknife_sp_tape_short_forest_light_large.png' },
+    { id: 8, name: 'Gut Knife Urban Masked', type: 'Gut Knife', quality: 'Battle-Scarred', price: 2200, isNew: false, category: 'knife', image: 'https://cdn.cloudflare.steamstatic.com/apps/730/icons/econ/default_generated/weapon_knife_gut_sp_tape_urban_light_large.png' },
+    { id: 9, name: 'Bayonet Autotronic', type: 'Bayonet', quality: 'Factory New', price: 28000, isNew: false, category: 'knife', image: 'https://cdn.cloudflare.steamstatic.com/apps/730/icons/econ/default_generated/weapon_bayonet_cu_bayonet_autotronic_light_large.png' },
+    { id: 10, name: 'Bowie Knife Stained', type: 'Bowie', quality: 'Minimal Wear', price: 4500, isNew: false, category: 'knife', image: 'https://cdn.cloudflare.steamstatic.com/apps/730/icons/econ/default_generated/weapon_knife_survival_bowie_aq_blued_light_large.png' },
+    { id: 11, name: 'Stiletto Knife Night Stripe', type: 'Stiletto', quality: 'Field-Tested', price: 5200, isNew: true, category: 'knife', image: 'https://cdn.cloudflare.steamstatic.com/apps/730/icons/econ/default_generated/weapon_knife_stiletto_sp_zebra_light_large.png' },
+    { id: 12, name: 'Classic Knife Forest DDPAT', type: 'Classic', quality: 'Well-Worn', price: 1500, isNew: false, category: 'knife', image: 'https://cdn.cloudflare.steamstatic.com/apps/730/icons/econ/default_generated/weapon_knife_css_hy_ddpat_light_large.png' },
+    { id: 13, name: 'Sport Gloves Pandora\'s Box', type: 'Sport Gloves', quality: 'Factory New', price: 18500, isNew: true, category: 'gloves', image: 'https://cdn.cloudflare.steamstatic.com/apps/730/icons/econ/default_generated/weapon_gloves_sporty_am_pandora_light_large.png' },
+    { id: 14, name: 'Specialist Gloves Crimson Kimono', type: 'Specialist Gloves', quality: 'Minimal Wear', price: 15200, isNew: true, category: 'gloves', image: 'https://cdn.cloudflare.steamstatic.com/apps/730/icons/econ/default_generated/weapon_gloves_specialist_aq_kimono_light_large.png' },
+    { id: 15, name: 'Driver Gloves King Snake', type: 'Driver Gloves', quality: 'Field-Tested', price: 9800, isNew: false, category: 'gloves', image: 'https://cdn.cloudflare.steamstatic.com/apps/730/icons/econ/default_generated/weapon_gloves_handwrap_hy_snake_light_large.png' },
+    { id: 16, name: 'Hand Wraps Slaughter', type: 'Hand Wraps', quality: 'Minimal Wear', price: 12000, isNew: true, category: 'gloves', image: 'https://cdn.cloudflare.steamstatic.com/apps/730/icons/econ/default_generated/weapon_gloves_handwrap_aq_handwrap_slaughter_light_large.png' },
+    { id: 17, name: 'Moto Gloves Spearmint', type: 'Moto Gloves', quality: 'Factory New', price: 19500, isNew: true, category: 'gloves', image: 'https://cdn.cloudflare.steamstatic.com/apps/730/icons/econ/default_generated/weapon_gloves_motorcycle_am_spearmint_light_large.png' },
+    { id: 18, name: 'Specialist Gloves Emerald Web', type: 'Specialist Gloves', quality: 'Field-Tested', price: 8500, isNew: false, category: 'gloves', image: 'https://cdn.cloudflare.steamstatic.com/apps/730/icons/econ/default_generated/weapon_gloves_specialist_hy_emerald_web_light_large.png' },
+    { id: 19, name: 'Sport Gloves Vice', type: 'Sport Gloves', quality: 'Minimal Wear', price: 11500, isNew: true, category: 'gloves', image: 'https://cdn.cloudflare.steamstatic.com/apps/730/icons/econ/default_generated/weapon_gloves_sporty_aq_vice_light_large.png' },
+    { id: 20, name: 'Driver Gloves Crimson Weave', type: 'Driver Gloves', quality: 'Well-Worn', price: 6200, isNew: false, category: 'gloves', image: 'https://cdn.cloudflare.steamstatic.com/apps/730/icons/econ/default_generated/weapon_gloves_handwrap_sp_mesh_hot_and_cold_light_large.png' },
   ];
 
-  const addToCart = (knife: KnifeItem) => {
-    setCartItems([...cartItems, knife]);
+  const addToCart = (item: Item) => {
+    setCartItems([...cartItems, item]);
     setCartCount(cartCount + 1);
   };
 
@@ -55,12 +65,14 @@ const Index = () => {
     return cartItems.reduce((sum, item) => sum + item.price, 0);
   };
 
-  const filteredKnives = knives.filter(knife =>
-    knife.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    knife.type.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredItems = items
+    .filter(item => selectedCategory === 'all' || item.category === selectedCategory)
+    .filter(item =>
+      item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.type.toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
-  const newKnives = knives.filter(knife => knife.isNew);
+  const newItems = items.filter(item => item.isNew);
 
   return (
     <div className="min-h-screen bg-background">
@@ -94,25 +106,41 @@ const Index = () => {
           <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary/20 via-secondary/20 to-accent/20 p-8 md:p-12 border border-primary/30">
             <div className="relative z-10">
               <h2 className="text-4xl md:text-5xl font-bold mb-4 glow-effect">
-                Редкие ножи CS:GO 2
+                Редкие скины CS:GO 2
               </h2>
               <p className="text-lg md:text-xl text-muted-foreground mb-6">
-                Эксклюзивные скины от проверенных продавцов
+                Эксклюзивные ножи и перчатки от проверенных продавцов
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 max-w-2xl">
+              <div className="flex flex-col sm:flex-row gap-4 max-w-3xl">
                 <div className="relative flex-1">
                   <Icon name="Search" size={20} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
                   <Input
-                    placeholder="Поиск по названию или типу оружия..."
+                    placeholder="Поиск по названию или типу..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     className="pl-10 bg-background/50 border-primary/30 focus:border-primary"
                   />
                 </div>
-                <Button className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold">
-                  <Icon name="Filter" size={20} className="mr-2" />
-                  Фильтры
-                </Button>
+                <div className="flex gap-2">
+                  <Button 
+                    onClick={() => setSelectedCategory('all')}
+                    className={selectedCategory === 'all' ? 'bg-primary hover:bg-primary/90' : 'bg-background/50 hover:bg-background/70 border border-primary/30'}
+                  >
+                    Всё
+                  </Button>
+                  <Button 
+                    onClick={() => setSelectedCategory('knife')}
+                    className={selectedCategory === 'knife' ? 'bg-primary hover:bg-primary/90' : 'bg-background/50 hover:bg-background/70 border border-primary/30'}
+                  >
+                    🔪 Ножи
+                  </Button>
+                  <Button 
+                    onClick={() => setSelectedCategory('gloves')}
+                    className={selectedCategory === 'gloves' ? 'bg-primary hover:bg-primary/90' : 'bg-background/50 hover:bg-background/70 border border-primary/30'}
+                  >
+                    🧤 Перчатки
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
@@ -125,28 +153,31 @@ const Index = () => {
               <h3 className="text-2xl font-bold">Новинки</h3>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {newKnives.map((knife) => (
-                <Card key={knife.id} className="group bg-card border-primary/20 hover-glow overflow-hidden animate-scale-in">
+              {newItems.map((item) => (
+                <Card key={item.id} className="group bg-card border-primary/20 hover-glow overflow-hidden animate-scale-in">
                   <div className="relative overflow-hidden bg-gradient-to-br from-primary/10 to-secondary/10 p-4">
+                    <Badge className="absolute top-2 left-2 bg-secondary/80 text-secondary-foreground">
+                      {item.category === 'knife' ? '🔪 Нож' : '🧤 Перчатки'}
+                    </Badge>
                     <Badge className="absolute top-2 right-2 bg-accent text-accent-foreground animate-pulse-glow">
                       НОВИНКА
                     </Badge>
                     <img
-                      src={knife.image}
-                      alt={knife.name}
+                      src={item.image}
+                      alt={item.name}
                       className="w-full h-48 object-contain transform group-hover:scale-110 transition-transform duration-300"
                     />
                   </div>
                   <CardContent className="p-4">
-                    <h4 className="font-bold text-lg mb-1">{knife.name}</h4>
-                    <p className="text-sm text-muted-foreground mb-2">{knife.quality}</p>
+                    <h4 className="font-bold text-lg mb-1">{item.name}</h4>
+                    <p className="text-sm text-muted-foreground mb-2">{item.quality}</p>
                     <div className="flex items-center justify-between">
                       <span className="text-xl font-bold text-primary">
-                        {knife.price.toLocaleString('ru-RU')} ₽
+                        {item.price.toLocaleString('ru-RU')} ₽
                       </span>
                       <Button
                         size="sm"
-                        onClick={() => addToCart(knife)}
+                        onClick={() => addToCart(item)}
                         className="bg-primary hover:bg-primary/90"
                       >
                         <Icon name="ShoppingBag" size={16} />
@@ -165,32 +196,35 @@ const Index = () => {
             <h3 className="text-2xl font-bold">Каталог</h3>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {filteredKnives.map((knife, index) => (
+            {filteredItems.map((item, index) => (
               <Card
-                key={knife.id}
+                key={item.id}
                 className="group bg-card border-primary/20 hover-glow overflow-hidden animate-scale-in"
                 style={{ animationDelay: `${index * 0.05}s` }}
               >
                 <div className="relative overflow-hidden bg-gradient-to-br from-primary/10 to-secondary/10 p-4">
+                  <Badge className="absolute top-2 left-2 bg-secondary/80 text-secondary-foreground">
+                    {item.category === 'knife' ? '🔪' : '🧤'}
+                  </Badge>
                   <img
-                    src={knife.image}
-                    alt={knife.name}
+                    src={item.image}
+                    alt={item.name}
                     className="w-full h-48 object-contain transform group-hover:scale-110 transition-transform duration-300"
                   />
                 </div>
                 <CardContent className="p-4">
                   <Badge variant="secondary" className="mb-2 text-xs">
-                    {knife.type}
+                    {item.type}
                   </Badge>
-                  <h4 className="font-bold text-lg mb-1">{knife.name}</h4>
-                  <p className="text-sm text-muted-foreground mb-3">{knife.quality}</p>
+                  <h4 className="font-bold text-lg mb-1">{item.name}</h4>
+                  <p className="text-sm text-muted-foreground mb-3">{item.quality}</p>
                   <div className="flex items-center justify-between">
                     <span className="text-xl font-bold text-primary">
-                      {knife.price.toLocaleString('ru-RU')} ₽
+                      {item.price.toLocaleString('ru-RU')} ₽
                     </span>
                     <Button
                       size="sm"
-                      onClick={() => addToCart(knife)}
+                      onClick={() => addToCart(item)}
                       className="bg-primary hover:bg-primary/90"
                     >
                       <Icon name="ShoppingBag" size={16} />
