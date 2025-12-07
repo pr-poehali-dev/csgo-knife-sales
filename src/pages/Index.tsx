@@ -16,6 +16,8 @@ interface Item {
   isNew: boolean;
   image: string;
   category: 'knife' | 'gloves';
+  description?: string;
+  float?: string;
 }
 
 const Index = () => {
@@ -26,28 +28,37 @@ const Index = () => {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState('card');
+  const [selectedItem, setSelectedItem] = useState<Item | null>(null);
 
   const items: Item[] = [
-    { id: 1, name: 'Karambit Fade', type: 'Karambit', quality: 'Factory New', price: 45000, isNew: true, category: 'knife', image: 'https://cdn.cloudflare.steamstatic.com/apps/730/icons/econ/default_generated/weapon_knife_karambit_aq_fade_light_large.png' },
-    { id: 2, name: 'M9 Bayonet Doppler', type: 'M9 Bayonet', quality: 'Minimal Wear', price: 32000, isNew: true, category: 'knife', image: 'https://cdn.cloudflare.steamstatic.com/apps/730/icons/econ/default_generated/weapon_knife_m9_bayonet_am_doppler_phase2_light_large.png' },
-    { id: 3, name: 'Butterfly Knife Tiger Tooth', type: 'Butterfly', quality: 'Factory New', price: 38000, isNew: false, category: 'knife', image: 'https://cdn.cloudflare.steamstatic.com/apps/730/icons/econ/default_generated/weapon_knife_butterfly_an_tiger_orange_light_large.png' },
-    { id: 4, name: 'Gut Knife Gamma Doppler', type: 'Gut Knife', quality: 'Factory New', price: 15000, isNew: true, category: 'knife', image: 'https://cdn.cloudflare.steamstatic.com/apps/730/icons/econ/default_generated/weapon_knife_gut_am_gamma_doppler_phase1_light_large.png' },
-    { id: 5, name: 'Shadow Daggers Rust Coat', type: 'Shadow Daggers', quality: 'Battle-Scarred', price: 3500, isNew: false, category: 'knife', image: 'https://cdn.cloudflare.steamstatic.com/apps/730/icons/econ/default_generated/weapon_knife_push_aq_rust_coat_light_large.png' },
-    { id: 6, name: 'Falchion Knife Safari Mesh', type: 'Falchion', quality: 'Field-Tested', price: 2800, isNew: false, category: 'knife', image: 'https://cdn.cloudflare.steamstatic.com/apps/730/icons/econ/default_generated/weapon_knife_falchion_sp_mesh_tan_light_large.png' },
-    { id: 7, name: 'Navaja Knife Boreal Forest', type: 'Navaja', quality: 'Well-Worn', price: 1900, isNew: false, category: 'knife', image: 'https://cdn.cloudflare.steamstatic.com/apps/730/icons/econ/default_generated/weapon_knife_gypsy_jackknife_sp_tape_short_forest_light_large.png' },
-    { id: 8, name: 'Gut Knife Urban Masked', type: 'Gut Knife', quality: 'Battle-Scarred', price: 2200, isNew: false, category: 'knife', image: 'https://cdn.cloudflare.steamstatic.com/apps/730/icons/econ/default_generated/weapon_knife_gut_sp_tape_urban_light_large.png' },
-    { id: 9, name: 'Bayonet Autotronic', type: 'Bayonet', quality: 'Factory New', price: 28000, isNew: false, category: 'knife', image: 'https://cdn.cloudflare.steamstatic.com/apps/730/icons/econ/default_generated/weapon_bayonet_cu_bayonet_autotronic_light_large.png' },
-    { id: 10, name: 'Bowie Knife Stained', type: 'Bowie', quality: 'Minimal Wear', price: 4500, isNew: false, category: 'knife', image: 'https://cdn.cloudflare.steamstatic.com/apps/730/icons/econ/default_generated/weapon_knife_survival_bowie_aq_blued_light_large.png' },
-    { id: 11, name: 'Stiletto Knife Night Stripe', type: 'Stiletto', quality: 'Field-Tested', price: 5200, isNew: true, category: 'knife', image: 'https://cdn.cloudflare.steamstatic.com/apps/730/icons/econ/default_generated/weapon_knife_stiletto_sp_zebra_light_large.png' },
-    { id: 12, name: 'Classic Knife Forest DDPAT', type: 'Classic', quality: 'Well-Worn', price: 1500, isNew: false, category: 'knife', image: 'https://cdn.cloudflare.steamstatic.com/apps/730/icons/econ/default_generated/weapon_knife_css_hy_ddpat_light_large.png' },
-    { id: 13, name: 'Sport Gloves Pandora\'s Box', type: 'Sport Gloves', quality: 'Factory New', price: 18500, isNew: true, category: 'gloves', image: 'https://cdn.cloudflare.steamstatic.com/apps/730/icons/econ/default_generated/weapon_gloves_sporty_am_pandora_light_large.png' },
-    { id: 14, name: 'Specialist Gloves Crimson Kimono', type: 'Specialist Gloves', quality: 'Minimal Wear', price: 15200, isNew: true, category: 'gloves', image: 'https://cdn.cloudflare.steamstatic.com/apps/730/icons/econ/default_generated/weapon_gloves_specialist_aq_kimono_light_large.png' },
-    { id: 15, name: 'Driver Gloves King Snake', type: 'Driver Gloves', quality: 'Field-Tested', price: 9800, isNew: false, category: 'gloves', image: 'https://cdn.cloudflare.steamstatic.com/apps/730/icons/econ/default_generated/weapon_gloves_handwrap_hy_snake_light_large.png' },
-    { id: 16, name: 'Hand Wraps Slaughter', type: 'Hand Wraps', quality: 'Minimal Wear', price: 12000, isNew: true, category: 'gloves', image: 'https://cdn.cloudflare.steamstatic.com/apps/730/icons/econ/default_generated/weapon_gloves_handwrap_aq_handwrap_slaughter_light_large.png' },
-    { id: 17, name: 'Moto Gloves Spearmint', type: 'Moto Gloves', quality: 'Factory New', price: 19500, isNew: true, category: 'gloves', image: 'https://cdn.cloudflare.steamstatic.com/apps/730/icons/econ/default_generated/weapon_gloves_motorcycle_am_spearmint_light_large.png' },
-    { id: 18, name: 'Specialist Gloves Emerald Web', type: 'Specialist Gloves', quality: 'Field-Tested', price: 8500, isNew: false, category: 'gloves', image: 'https://cdn.cloudflare.steamstatic.com/apps/730/icons/econ/default_generated/weapon_gloves_specialist_hy_emerald_web_light_large.png' },
-    { id: 19, name: 'Sport Gloves Vice', type: 'Sport Gloves', quality: 'Minimal Wear', price: 11500, isNew: true, category: 'gloves', image: 'https://cdn.cloudflare.steamstatic.com/apps/730/icons/econ/default_generated/weapon_gloves_sporty_aq_vice_light_large.png' },
-    { id: 20, name: 'Driver Gloves Crimson Weave', type: 'Driver Gloves', quality: 'Well-Worn', price: 6200, isNew: false, category: 'gloves', image: 'https://cdn.cloudflare.steamstatic.com/apps/730/icons/econ/default_generated/weapon_gloves_handwrap_sp_mesh_hot_and_cold_light_large.png' },
+    { id: 1, name: 'Karambit Fade', type: 'Karambit', quality: 'Factory New', price: 38000, isNew: true, category: 'knife', image: 'https://cdn.cloudflare.steamstatic.com/apps/730/icons/econ/default_generated/weapon_knife_karambit_aq_fade_light_large.png', description: 'Легендарный нож с переливающимся градиентом', float: '0.0089' },
+    { id: 2, name: 'M9 Bayonet Doppler Phase 2', type: 'M9 Bayonet', quality: 'Minimal Wear', price: 27000, isNew: true, category: 'knife', image: 'https://cdn.cloudflare.steamstatic.com/apps/730/icons/econ/default_generated/weapon_knife_m9_bayonet_am_doppler_phase2_light_large.png', description: 'Розовый Doppler Phase 2, очень редкий', float: '0.0712' },
+    { id: 3, name: 'Butterfly Knife Tiger Tooth', type: 'Butterfly', quality: 'Factory New', price: 32000, isNew: false, category: 'knife', image: 'https://cdn.cloudflare.steamstatic.com/apps/730/icons/econ/default_generated/weapon_knife_butterfly_an_tiger_orange_light_large.png', description: 'Тигровый узор на бабочке', float: '0.0156' },
+    { id: 4, name: 'Gut Knife Gamma Doppler', type: 'Gut Knife', quality: 'Factory New', price: 12500, isNew: true, category: 'knife', image: 'https://cdn.cloudflare.steamstatic.com/apps/730/icons/econ/default_generated/weapon_knife_gut_am_gamma_doppler_phase1_light_large.png', description: 'Гамма Doppler с зеленым оттенком', float: '0.0234' },
+    { id: 5, name: 'Shadow Daggers Rust Coat', type: 'Shadow Daggers', quality: 'Battle-Scarred', price: 2900, isNew: false, category: 'knife', image: 'https://cdn.cloudflare.steamstatic.com/apps/730/icons/econ/default_generated/weapon_knife_push_aq_rust_coat_light_large.png', description: 'Два кинжала с эффектом ржавчины', float: '0.7854' },
+    { id: 6, name: 'Falchion Knife Safari Mesh', type: 'Falchion', quality: 'Field-Tested', price: 2100, isNew: false, category: 'knife', image: 'https://cdn.cloudflare.steamstatic.com/apps/730/icons/econ/default_generated/weapon_knife_falchion_sp_mesh_tan_light_large.png', description: 'Камуфляжная сетка на Falchion', float: '0.3567' },
+    { id: 7, name: 'Navaja Knife Boreal Forest', type: 'Navaja', quality: 'Well-Worn', price: 1400, isNew: false, category: 'knife', image: 'https://cdn.cloudflare.steamstatic.com/apps/730/icons/econ/default_generated/weapon_knife_gypsy_jackknife_sp_tape_short_forest_light_large.png', description: 'Лесной камуфляж', float: '0.4123' },
+    { id: 8, name: 'Gut Knife Urban Masked', type: 'Gut Knife', quality: 'Battle-Scarred', price: 1800, isNew: false, category: 'knife', image: 'https://cdn.cloudflare.steamstatic.com/apps/730/icons/econ/default_generated/weapon_knife_gut_sp_tape_urban_light_large.png', description: 'Городской камуфляж', float: '0.6234' },
+    { id: 9, name: 'Bayonet Autotronic', type: 'Bayonet', quality: 'Factory New', price: 24000, isNew: false, category: 'knife', image: 'https://cdn.cloudflare.steamstatic.com/apps/730/icons/econ/default_generated/weapon_bayonet_cu_bayonet_autotronic_light_large.png', description: 'Футуристический дизайн', float: '0.0423' },
+    { id: 10, name: 'Bowie Knife Stained', type: 'Bowie', quality: 'Minimal Wear', price: 3800, isNew: false, category: 'knife', image: 'https://cdn.cloudflare.steamstatic.com/apps/730/icons/econ/default_generated/weapon_knife_survival_bowie_aq_blued_light_large.png', description: 'Нож Bowie с синим оттенком', float: '0.0912' },
+    { id: 11, name: 'Stiletto Knife Night Stripe', type: 'Stiletto', quality: 'Field-Tested', price: 4200, isNew: true, category: 'knife', image: 'https://cdn.cloudflare.steamstatic.com/apps/730/icons/econ/default_generated/weapon_knife_stiletto_sp_zebra_light_large.png', description: 'Ночные полосы', float: '0.2567' },
+    { id: 12, name: 'Classic Knife Forest DDPAT', type: 'Classic', quality: 'Well-Worn', price: 1100, isNew: false, category: 'knife', image: 'https://cdn.cloudflare.steamstatic.com/apps/730/icons/econ/default_generated/weapon_knife_css_hy_ddpat_light_large.png', description: 'Классический лесной камуфляж', float: '0.4456' },
+    { id: 21, name: 'Ursus Knife Fade', type: 'Ursus', quality: 'Factory New', price: 29000, isNew: true, category: 'knife', image: 'https://cdn.cloudflare.steamstatic.com/apps/730/icons/econ/default_generated/weapon_knife_ursus_aq_fade_light_large.png', description: 'Медвежий нож с Fade', float: '0.0123' },
+    { id: 22, name: 'Huntsman Knife Slaughter', type: 'Huntsman', quality: 'Minimal Wear', price: 18500, isNew: true, category: 'knife', image: 'https://cdn.cloudflare.steamstatic.com/apps/730/icons/econ/default_generated/weapon_knife_tactical_am_zebra_light_large.png', description: 'Охотничий нож Slaughter', float: '0.0834' },
+    { id: 23, name: 'Paracord Knife Crimson Web', type: 'Paracord', quality: 'Field-Tested', price: 8900, isNew: false, category: 'knife', image: 'https://cdn.cloudflare.steamstatic.com/apps/730/icons/econ/default_generated/weapon_knife_cord_hy_webs_light_large.png', description: 'Паракорд с паутиной', float: '0.1567' },
+    { id: 24, name: 'Skeleton Knife Case Hardened', type: 'Skeleton', quality: 'Well-Worn', price: 15000, isNew: true, category: 'knife', image: 'https://cdn.cloudflare.steamstatic.com/apps/730/icons/econ/default_generated/weapon_knife_skeleton_aq_oiled_light_large.png', description: 'Закаленный скелет', float: '0.3912' },
+    { id: 25, name: 'Talon Knife Doppler', type: 'Talon', quality: 'Factory New', price: 35000, isNew: true, category: 'knife', image: 'https://cdn.cloudflare.steamstatic.com/apps/730/icons/econ/default_generated/weapon_knife_widowmaker_am_doppler_phase1_light_large.png', description: 'Коготь с Doppler', float: '0.0089' },
+    { id: 26, name: 'Flip Knife Marble Fade', type: 'Flip', quality: 'Factory New', price: 22000, isNew: false, category: 'knife', image: 'https://cdn.cloudflare.steamstatic.com/apps/730/icons/econ/default_generated/weapon_knife_flip_aq_marble_fade_light_large.png', description: 'Мраморный градиент', float: '0.0134' },
+    { id: 27, name: 'Nomad Knife Blue Steel', type: 'Nomad', quality: 'Minimal Wear', price: 6500, isNew: false, category: 'knife', image: 'https://cdn.cloudflare.steamstatic.com/apps/730/icons/econ/default_generated/weapon_knife_outdoor_aq_blued_light_large.png', description: 'Синяя сталь', float: '0.1089' },
+    { id: 28, name: 'Survival Knife Night', type: 'Survival', quality: 'Field-Tested', price: 3200, isNew: false, category: 'knife', image: 'https://cdn.cloudflare.steamstatic.com/apps/730/icons/econ/default_generated/weapon_knife_canis_so_night_light_large.png', description: 'Ночной камуфляж', float: '0.2456' },
+    { id: 13, name: 'Sport Gloves Pandora\'s Box', type: 'Sport Gloves', quality: 'Factory New', price: 16500, isNew: true, category: 'gloves', image: 'https://cdn.cloudflare.steamstatic.com/apps/730/icons/econ/default_generated/weapon_gloves_sporty_am_pandora_light_large.png', description: 'Яркие спортивные перчатки', float: '0.0689' },
+    { id: 14, name: 'Specialist Gloves Crimson Kimono', type: 'Specialist Gloves', quality: 'Minimal Wear', price: 13200, isNew: true, category: 'gloves', image: 'https://cdn.cloudflare.steamstatic.com/apps/730/icons/econ/default_generated/weapon_gloves_specialist_aq_kimono_light_large.png', description: 'Кимоно в японском стиле', float: '0.0912' },
+    { id: 15, name: 'Driver Gloves King Snake', type: 'Driver Gloves', quality: 'Field-Tested', price: 8200, isNew: false, category: 'gloves', image: 'https://cdn.cloudflare.steamstatic.com/apps/730/icons/econ/default_generated/weapon_gloves_handwrap_hy_snake_light_large.png', description: 'Змеиный узор', float: '0.2134' },
+    { id: 16, name: 'Hand Wraps Slaughter', type: 'Hand Wraps', quality: 'Minimal Wear', price: 10500, isNew: true, category: 'gloves', image: 'https://cdn.cloudflare.steamstatic.com/apps/730/icons/econ/default_generated/weapon_gloves_handwrap_aq_handwrap_slaughter_light_large.png', description: 'Красный Slaughter узор', float: '0.0823' },
+    { id: 17, name: 'Moto Gloves Spearmint', type: 'Moto Gloves', quality: 'Factory New', price: 17500, isNew: true, category: 'gloves', image: 'https://cdn.cloudflare.steamstatic.com/apps/730/icons/econ/default_generated/weapon_gloves_motorcycle_am_spearmint_light_large.png', description: 'Мятные мото перчатки', float: '0.0534' },
+    { id: 18, name: 'Specialist Gloves Emerald Web', type: 'Specialist Gloves', quality: 'Field-Tested', price: 7200, isNew: false, category: 'gloves', image: 'https://cdn.cloudflare.steamstatic.com/apps/730/icons/econ/default_generated/weapon_gloves_specialist_hy_emerald_web_light_large.png', description: 'Изумрудная паутина', float: '0.1867' },
+    { id: 19, name: 'Sport Gloves Vice', type: 'Sport Gloves', quality: 'Minimal Wear', price: 9800, isNew: true, category: 'gloves', image: 'https://cdn.cloudflare.steamstatic.com/apps/730/icons/econ/default_generated/weapon_gloves_sporty_aq_vice_light_large.png', description: 'Стиль Vice City', float: '0.0945' },
+    { id: 20, name: 'Driver Gloves Crimson Weave', type: 'Driver Gloves', quality: 'Well-Worn', price: 5200, isNew: false, category: 'gloves', image: 'https://cdn.cloudflare.steamstatic.com/apps/730/icons/econ/default_generated/weapon_gloves_handwrap_sp_mesh_hot_and_cold_light_large.png', description: 'Красное плетение', float: '0.4123' },
   ];
 
   const addToCart = (item: Item) => {
@@ -79,8 +90,8 @@ const Index = () => {
       <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-20 items-center justify-between px-4 md:px-8">
           <div className="flex items-center gap-3">
-            <div className="text-3xl">🔪</div>
-            <h1 className="text-2xl md:text-3xl font-bold text-gradient">CS:GO 2 KNIVES</h1>
+            <div className="text-3xl">🎮</div>
+            <h1 className="text-2xl md:text-3xl font-bold text-gradient">MARKET.CSGO</h1>
           </div>
           
           <div className="flex items-center gap-4">
@@ -175,13 +186,23 @@ const Index = () => {
                       <span className="text-xl font-bold text-primary">
                         {item.price.toLocaleString('ru-RU')} ₽
                       </span>
-                      <Button
-                        size="sm"
-                        onClick={() => addToCart(item)}
-                        className="bg-primary hover:bg-primary/90"
-                      >
-                        <Icon name="ShoppingBag" size={16} />
-                      </Button>
+                      <div className="flex gap-2">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => setSelectedItem(item)}
+                          className="border-primary/50 hover:bg-primary/10"
+                        >
+                          <Icon name="Eye" size={16} />
+                        </Button>
+                        <Button
+                          size="sm"
+                          onClick={() => addToCart(item)}
+                          className="bg-primary hover:bg-primary/90"
+                        >
+                          <Icon name="ShoppingBag" size={16} />
+                        </Button>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
@@ -222,13 +243,23 @@ const Index = () => {
                     <span className="text-xl font-bold text-primary">
                       {item.price.toLocaleString('ru-RU')} ₽
                     </span>
-                    <Button
-                      size="sm"
-                      onClick={() => addToCart(item)}
-                      className="bg-primary hover:bg-primary/90"
-                    >
-                      <Icon name="ShoppingBag" size={16} />
-                    </Button>
+                    <div className="flex gap-2">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => setSelectedItem(item)}
+                        className="border-primary/50 hover:bg-primary/10"
+                      >
+                        <Icon name="Eye" size={16} />
+                      </Button>
+                      <Button
+                        size="sm"
+                        onClick={() => addToCart(item)}
+                        className="bg-primary hover:bg-primary/90"
+                      >
+                        <Icon name="ShoppingBag" size={16} />
+                      </Button>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
@@ -244,11 +275,11 @@ const Index = () => {
               <div className="flex flex-col gap-2">
                 <div className="flex items-center gap-2">
                   <Icon name="Mail" size={18} className="text-primary" />
-                  <span>support@csgo-knives.com</span>
+                  <span>dertaclap28@gmail.com</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Icon name="MessageCircle" size={18} className="text-secondary" />
-                  <span>Telegram: @csgo_knives_support</span>
+                  <span>Telegram: @l1insa_cs</span>
                 </div>
               </div>
             </div>
@@ -425,14 +456,18 @@ const Index = () => {
                 <Button 
                   className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-bold text-lg h-12"
                   onClick={() => {
-                    if (paymentMethod === 'sbp') {
+                    const amount = getTotalPrice();
+                    if (paymentMethod === 'card') {
+                      alert(`Переведите ${amount.toLocaleString('ru-RU')} ₽ на карту:\n\n2200 1536 0504 2952\n\nПосле оплаты свяжитесь с нами через Telegram: @l1insa_cs`);
+                    } else if (paymentMethod === 'sbp') {
                       const phone = '79822141678';
-                      const amount = getTotalPrice();
                       const sbpUrl = `https://qr.nspk.ru/AS10003DKT0EJMK25O47N02GTE3V64QC?type=02&bank=100000000111&sum=${amount}&cur=RUB&payeeId=${phone}&phone=${phone}`;
                       window.open(sbpUrl, '_blank');
                       alert(`Переход на оплату ${amount.toLocaleString('ru-RU')} ₽ через СБП на номер +7 (982) 214-16-78`);
+                    } else if (paymentMethod === 'crypto') {
+                      alert(`Оплата криптовалютой:\n\nСвяжитесь с нами в Telegram: @l1insa_cs\nдля получения реквизитов\n\nСумма: ${amount.toLocaleString('ru-RU')} ₽`);
                     } else {
-                      alert(`Заказ оформлен! Способ оплаты: ${paymentMethod === 'card' ? 'Банковская карта' : paymentMethod === 'crypto' ? 'Криптовалюта' : 'Steam скины'}. Сумма: ${getTotalPrice().toLocaleString('ru-RU')} ₽`);
+                      alert(`Обмен на Steam скины:\n\nСвяжитесь с нами в Telegram: @l1insa_cs\n\nСумма: ${amount.toLocaleString('ru-RU')} ₽`);
                     }
                     setIsCheckoutOpen(false);
                     setCartItems([]);
@@ -442,6 +477,91 @@ const Index = () => {
                   <Icon name="Check" size={20} className="mr-2" />
                   Оплатить {getTotalPrice().toLocaleString('ru-RU')} ₽
                 </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
+      {selectedItem && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 animate-fade-in" onClick={() => setSelectedItem(null)}>
+          <Card className="w-full max-w-2xl bg-card border-primary/30 animate-scale-in" onClick={(e) => e.stopPropagation()}>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-2xl font-bold flex items-center gap-2">
+                  <Icon name="Info" size={24} className="text-primary" />
+                  Детали товара
+                </h3>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setSelectedItem(null)}
+                >
+                  <Icon name="X" size={24} />
+                </Button>
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-6">
+                <div className="bg-gradient-to-br from-primary/10 to-secondary/10 rounded-lg p-6 flex items-center justify-center">
+                  <img 
+                    src={selectedItem.image} 
+                    alt={selectedItem.name} 
+                    className="w-full h-64 object-contain"
+                  />
+                </div>
+
+                <div className="space-y-4">
+                  <div>
+                    <Badge className="mb-2">{selectedItem.category === 'knife' ? '🔪 Нож' : '🧤 Перчатки'}</Badge>
+                    <h4 className="text-2xl font-bold mb-2">{selectedItem.name}</h4>
+                    <p className="text-muted-foreground">{selectedItem.description}</p>
+                  </div>
+
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-center py-2 border-b border-border">
+                      <span className="text-muted-foreground">Тип:</span>
+                      <span className="font-semibold">{selectedItem.type}</span>
+                    </div>
+                    <div className="flex justify-between items-center py-2 border-b border-border">
+                      <span className="text-muted-foreground">Качество:</span>
+                      <Badge variant="secondary">{selectedItem.quality}</Badge>
+                    </div>
+                    {selectedItem.float && (
+                      <div className="flex justify-between items-center py-2 border-b border-border">
+                        <span className="text-muted-foreground">Float Value:</span>
+                        <span className="font-mono text-sm font-semibold text-accent">{selectedItem.float}</span>
+                      </div>
+                    )}
+                    <div className="flex justify-between items-center py-3 mt-4">
+                      <span className="text-lg font-semibold">Цена:</span>
+                      <span className="text-3xl font-bold text-primary">{selectedItem.price.toLocaleString('ru-RU')} ₽</span>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-3 pt-4">
+                    <Button 
+                      className="flex-1 bg-primary hover:bg-primary/90"
+                      onClick={() => {
+                        addToCart(selectedItem);
+                        setSelectedItem(null);
+                      }}
+                    >
+                      <Icon name="ShoppingBag" size={20} className="mr-2" />
+                      В корзину
+                    </Button>
+                    <Button 
+                      className="flex-1 bg-accent hover:bg-accent/90 text-accent-foreground"
+                      onClick={() => {
+                        addToCart(selectedItem);
+                        setSelectedItem(null);
+                        setIsCheckoutOpen(true);
+                      }}
+                    >
+                      <Icon name="Zap" size={20} className="mr-2" />
+                      Купить сейчас
+                    </Button>
+                  </div>
+                </div>
               </div>
             </CardContent>
           </Card>
